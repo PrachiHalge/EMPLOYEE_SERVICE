@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: "employee-service"
+  cloud:                  #enable circuit breaker for feign client
+    openfeign:
+      circuitbreaker:
+        enabled: true
+eureka:
+  #instance:
+    #prefer-ip-address: true     
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url: 
+        defaultZone: http://localhost:8070/eureka
+server.port: 8081
+#Enable actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+#Circuit Breaker Configuration
+resilience4j:
+  circuitbreaker:
+    configs:
+        default:
+           slidingWindowSize: 10 #Circuit breaker will consider last 10 calls to calculate failure rate
+           permitted-number-of-calls-in-half-open-state: 2 #Number of test calls allowed in hal-open state
+           failure-rate-threshold: 50 #If failure % >= 50%,circuite will open
+           wait-duration-in-open-state: 1000  #How long circuit breaker stays OPEN before
+    
